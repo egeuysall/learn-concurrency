@@ -13,8 +13,8 @@ func square(s []int, c chan int) {
 }
 
 func main() {
-	s := make([]int, 10)
-	for i := range 10 {
+	s := make([]int, 20)
+	for i := range 20 {
 		s[i] = i + 1
 	}
 	c := make(chan int)
