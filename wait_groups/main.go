@@ -6,22 +6,33 @@ import (
 	"time"
 )
 
-func worker(id int, wg *sync.WaitGroup) {
-	defer wg.Done() // decrements counter when function finishes
-	time.Sleep(time.Second)
-	fmt.Println("Worker", id, "done")
+func sendNotification(userID int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	// Simulate variable time to send notification
+	time.Sleep(time.Duration(userID%3+1) * 500 * time.Millisecond)
+	fmt.Println("Notification sent to user", userID)
 }
 
 func main() {
+	users := []int{101, 102, 103, 104, 105} // could be any number
 	var wg sync.WaitGroup
-	numWorkers := 3
 
-	wg.Add(numWorkers) // number of goroutines to wait for
-
-	for i := 1; i <= numWorkers; i++ {
-		go worker(i, &wg)
+	for _, user := range users {
+		wg.Add(1)
+		go sendNotification(user, &wg)
 	}
 
-	wg.Wait() // block until all workers call Done()
-	fmt.Println("All workers finished")
+	done := make(chan struct{})
+	go func() {
+		wg.Wait()       // wait for all notifications to finish
+		close(done)     // signal completion
+	}()
+
+	select {
+	case <-done:
+		fmt.Println("All notifications sent successfully!")
+	case <-time.After(2 * time.Second):
+		fmt.Println("Timeout! Some notifications took too long.")
+	}
 }
