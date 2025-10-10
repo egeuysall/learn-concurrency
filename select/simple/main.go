@@ -20,7 +20,7 @@ func main() {
 	}()
 
 	// Loop twice to receive messages from both channels
-	for i := 0; i < 2; i++ {
+	for range 2 {
 		// select statement allows us to wait on multiple channel operations
 		// It will block until one of the channels has data ready to receive
 		// Whichever channel receives data first will be processed
