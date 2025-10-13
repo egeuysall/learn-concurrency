@@ -57,7 +57,7 @@ func main() {
 	// Start a goroutine to send 10 tasks at regular intervals
 	go func() {
 		for i := range 10 {
-			<-ticker.C // Wait for the next tick
+			<-ticker.C                         // Wait for the next tick
 			tasks <- fmt.Sprintf("Task-%d", i) // Send a task to the channel
 		}
 		// Close the tasks channel after all tasks are sent
